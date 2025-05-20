@@ -1,7 +1,7 @@
-# MicroPython compatible version of an md5 calculator
-# Use in the same way as haslib's md5 class, with .update() and .digest() methods
-# Also with :bytes input and :bytes output
+# MicroPython compatible implementation of an md5 calculator
 # Useful because some hashlibs no longer include md5 functionality
+# Use in the same way as hashlib's md5 class, with .update() and .digest() methods
+# Also with :bytes input and :bytes output
 # Derived from https://github.com/Utkarsh87/md5-hashing
 
 class md5():
