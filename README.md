@@ -11,6 +11,6 @@ Usage example:
 
 <code>from md5lib import md5
 myHash = md5(b'your input byte-string')
-for i in range(n): myHash.update(b'more bytes')
+for i in range(100): myHash.update(b'more bytes')
 print(myHash.digest())
 </code>
