@@ -43,9 +43,7 @@ class md5():
         bitLen = (8*(len(self.msgTail) + 64*self.blkCnt)) & 0xFFFFFFFFFFFFFFFF
         msg = self.msgTail + b'\x80'
         while len(msg)%64 != 56: msg += b'\x00'
-        while len(msg) >= 64:
-            self.__proc64(msg[:64])
-            msg = msg[64:]
+        while len(msg) >= 64: self.__proc64(msg[:64]) ; msg = msg[64:]
         msg += bitLen.to_bytes(8, 'little')
         self.__proc64(msg)
         hash = sum(val<<(32*i) for i, val in enumerate(self.buff))
