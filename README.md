@@ -14,3 +14,19 @@ myHash = md5(b'your input byte-string')
 for i in range(100): myHash.update(b'more bytes')
 print(myHash.digest())
 </code>
+
+Test script:
+
+<code>import os
+from md5lib import md5
+from hashlib import md5 as refMD5
+n = int.from_bytes(os.urandom(1))
+w = int.from_bytes(os.urandom(1))
+bs = os.urandom(w)
+refHash = refMD5(bs)
+for i in range(n): refHash.update(bs)
+print(refHash.digest())
+myHash = md5(bs)
+for i in range(n): myHash.update(bs)
+print(myHash.digest())
+</code>
