@@ -17,23 +17,18 @@ class md5():
                      4096336452, 1126891415, 2878612391, 4237533241, 1700485571, 2399980690, 4293915773, 2240044497,
                      1873313359, 4264355552, 2734768916, 1309151649, 4149444226, 3174756917,  718787259, 3951481745]
         self.buff = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476]
-        self.blkCnt = 0
-        self.msgTail = msg
-    #
-    def __rl(self, x, cnt): return (x << cnt | (x & 0xFFFFFFFF) >> (32-cnt)) & 0xFFFFFFFF
+        self.blkCnt = 0 ; self.msgTail = msg
     #
     def __proc64(self, blk64:bytes):
+        def rl(x, cnt): return (x << cnt | (x & 0xFFFFFFFF) >> (32-cnt)) & 0xFFFFFFFF
         assert(len(blk64) == 64)
         A,B,C,D = self.buff
+        f1 = [lambda b,c,d: (b & c) | (~b & d), lambda b,c,d: (d & b) | (~d & c), lambda b,c,d: b ^ c ^ d, lambda b,c,d: c ^ (b | ~d)]
+        f2 = [lambda i: i, lambda i: (5*i + 1)%16, lambda i: (3*i + 5)%16, lambda i: (7*i)%16]
         for i in range(64):
-            if   i ==  0: f1 = lambda b,c,d: (b & c) | (~b & d) ; f2 = lambda i: i
-            elif i == 16: f1 = lambda b,c,d: (d & b) | (~d & c) ; f2 = lambda i: (5*i + 1)%16
-            elif i == 32: f1 = lambda b,c,d: b ^ c ^ d ;          f2 = lambda i: (3*i + 5)%16
-            elif i == 48: f1 = lambda b,c,d: c ^ (b | ~d) ;       f2 = lambda i: (7*i)%16
-            F,G = f1(B, C, D), f2(i)
+            F,G = f1[i//16](B, C, D), f2[i//16](i)
             rot = A + F + self.cLUT[i] + int.from_bytes(blk64[4*G : 4*G + 4], 'little')
-            newB = (B + self.__rl(rot, self.rLUT[i])) & 0xFFFFFFFF
-            A,B,C,D = D,newB,B,C
+            A,B,C,D = D, (B + rl(rot, self.rLUT[i])) & 0xFFFFFFFF, B, C
         for i, val in enumerate([A, B, C, D]): self.buff[i] = (self.buff[i] + val) & 0xFFFFFFFF
         return
     #
