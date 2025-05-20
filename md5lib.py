@@ -32,8 +32,8 @@ class md5():
         for i, val in enumerate([A, B, C, D]): self.buff[i] = (self.buff[i] + val) & 0xFFFFFFFF
         return
     #
-    def update(self, msgBytes) -> None:
-        self.msgTail += msgBytes
+    def update(self, msg:bytes) -> None:
+        self.msgTail += msg
         while len(self.msgTail) >= 64:
             self.__proc64(self.msgTail[:64])
             self.msgTail = self.msgTail[64:]
