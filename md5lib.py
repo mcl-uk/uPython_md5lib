@@ -25,7 +25,6 @@ class md5():
         return (x << cnt | x >> (32-cnt)) & 0xFFFFFFFF
     #
     def __proc64(self, blk64:bytes):
-        #
         assert(len(blk64) == 64)
         A,B,C,D = self.buff
         for i in range(64):
@@ -41,7 +40,6 @@ class md5():
         return
     #
     def update(self, msgBytes) -> None:
-        # add bytes to the hash...
         self.msgTail += msgBytes
         while len(self.msgTail) >= 64:
             self.__proc64(self.msgTail[:64])
@@ -49,14 +47,13 @@ class md5():
             self.blkCnt += 1
     #
     def digest(self) -> bytes:
-        # tidy-up, add msgLen return the hash
-        msg_len_in_bits = (8*(len(self.msgTail) + 64*self.blkCnt)) & 0xffffffffffffffff
+        bitLen = (8*(len(self.msgTail) + 64*self.blkCnt)) & 0xffffffffffffffff
         msg = self.msgTail + b'\x80'
         while len(msg)%64 != 56: msg += b'\x00'
         while len(msg) >= 64:
             self.__proc64(msg[:64])
             msg = msg[64:]
-        msg += msg_len_in_bits.to_bytes(8, 'little')
+        msg += bitLen.to_bytes(8, 'little')
         self.__proc64(msg)
         hash = sum(val<<(32*i) for i, val in enumerate(self.buff))
         msg = b''
