@@ -16,7 +16,7 @@ class md5():
                       681279174, 3936430074, 3572445317,   76029189, 3654602809, 3873151461,  530742520, 3299628645,
                      4096336452, 1126891415, 2878612391, 4237533241, 1700485571, 2399980690, 4293915773, 2240044497,
                      1873313359, 4264355552, 2734768916, 1309151649, 4149444226, 3174756917,  718787259, 3951481745]
-        self.buff = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476]
+        self.buff = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476]
         self.blkCnt = 0 ; self.msgTail = msg
     #
     def __proc64(self, blk64:bytes):
@@ -40,7 +40,7 @@ class md5():
             self.blkCnt += 1
     #
     def digest(self) -> bytes:
-        bitLen = (8*(len(self.msgTail) + 64*self.blkCnt)) & 0xffffffffffffffff
+        bitLen = (8*(len(self.msgTail) + 64*self.blkCnt)) & 0xFFFFFFFFFFFFFFFF
         msg = self.msgTail + b'\x80'
         while len(msg)%64 != 56: msg += b'\x00'
         while len(msg) >= 64:
